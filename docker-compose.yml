@@ -6,6 +6,8 @@ services:
       context: ./trackredge-api
       dockerfile: Dockerfile
     container_name: trackredge-api
+    volumes:
+      - ./trackredge-api:/var/www/html
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -27,21 +29,18 @@ services:
       - MAIL_ENCRYPTION=null
       - MAIL_FROM_ADDRESS=noreply@trackredge.com
       - MAIL_FROM_NAME="TrackrEdge"
-    volumes:
-      - ./trackredge-api:/var/www/html
-      - /var/www/html/vendor
     depends_on:
       - db
       - mailhog
     networks:
       - trackredge
-      
+
   portal:
     image: node:24
     container_name: trackredge-portal
     restart: unless-stopped
     working_dir: /app
-    command: bash -c "npm install && npm watch"
+    command: bash -c "npm install && npm run start:docker"
     ports:
       - "4200:4200"
     environment:
@@ -63,22 +62,6 @@ services:
       - POSTGRES_PASSWORD=trackredge
     volumes:
       - trackredge-db:/var/lib/postgresql/data
-    networks:
-      - trackredge
-  nginx:
-    image: nginx:alpine
-    container_name: trackredge-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/nginx/ssl
-      - ./nginx/logs:/var/log/nginx
-    depends_on:
-      - api
-      - portal
     networks:
       - trackredge
 
@@ -104,8 +87,8 @@ services:
     container_name: trackredge-mailhog
     restart: unless-stopped
     ports:
-      - "1025:1025" # SMTP server port
-      - "8025:8025" # Web UI port
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - trackredge
 
@@ -117,4 +100,6 @@ volumes:
   trackredge-db:
     driver: local
   pgadmin-data:
+    driver: local
+  vendor-volume:
     driver: local

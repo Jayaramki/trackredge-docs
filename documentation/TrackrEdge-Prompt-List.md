@@ -415,13 +415,14 @@ Implement a consistent error handling and user feedback system.
 
 #### 7.1 Auth API Endpoints (Laravel)
 ```
-Implement authentication endpoints in Laravel (register, login, logout, refresh, password reset).
+Implement authentication endpoints in Laravel (login, logout, refresh, password reset).
 - Reference: API Documentation (auth endpoints)
 - Log this prompt in prompt-log.json
 ```
 
 #### 7.2 Auth UI (Angular)
 ```
+Use docker for local environment setup
 Create login, registration, and password reset screens in Angular with glassmorphism.
 - Apply frosted glass effects to form containers
 - Add subtle animations for input focus
